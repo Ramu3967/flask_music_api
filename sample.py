@@ -104,12 +104,12 @@ if __name__ == '__main__':
     load_weights(epoch, model)
     model.save(os.path.join(MODEL_DIR, 'model.{}.h5'.format(epoch)))
 
-    with open(os.path.join(DATA_DIR, 'char_to_idx_1.json')) as f:
-        char_to_idx = json.load(f)
-    idx_to_char = { i: ch for (ch, i) in char_to_idx.items() }
-    data=[model,char_to_idx,idx_to_char]
+    # with open(os.path.join(DATA_DIR, 'char_to_idx_1.json')) as f:
+    #     char_to_idx = json.load(f)
+    # idx_to_char = { i: ch for (ch, i) in char_to_idx.items() }
+    # data=[model,char_to_idx,idx_to_char]
 
-    pickle.dump(data,open('model.pkl','wb'))
+    pickle.dump(model,open('model.pkl','wb'))
 
 #     # original ABC music data
 #     original_abc = """X: 119

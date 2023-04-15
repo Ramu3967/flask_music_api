@@ -1,3 +1,5 @@
+import json
+import os
 import pickle
 import numpy as np
 
@@ -5,7 +7,7 @@ from flask import Flask,jsonify,render_template
 
 app = Flask(__name__)
 
-model, char_to_idx, idx_to_char = pickle.load(open('model.pkl', 'rb'))
+model = pickle.load(open('model.pkl', 'rb'))
 
 @app.route('/')
 def hello_world():  # put application's code here
@@ -13,7 +15,10 @@ def hello_world():  # put application's code here
 
 @app.route('/generate_music',methods=['GET'])
 def generate_music():
+    with open(os.path.join('./data', 'char_to_idx_1.json')) as f:
+        char_to_idx = json.load(f)
     sampled = [char_to_idx[c] for c in '']
+    idx_to_char = {i: ch for (ch, i) in char_to_idx.items()}
     vocab_size, epoch,num_chars = 87, 100,1024
     for i in range(num_chars):
         batch = np.zeros((1, 1))
