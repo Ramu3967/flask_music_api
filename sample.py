@@ -11,7 +11,6 @@ from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dropout, TimeDistributed, Dense, Activation, Embedding
 from collections import Counter
 from scipy.stats import entropy
-from music21 import converter, instrument, note, chord, stream
 
 DATA_DIR = './data'
 MODEL_DIR = './model'
@@ -60,32 +59,6 @@ def sample(epoch, header, num_chars):
         return res[:ind + 1]
     return ""
 
-# convert ABC notation to sequence of notes represented as integers
-def abc_to_notes(abc):
-    # parse ABC notation to music21 stream object
-    stream_obj = converter.parse(abc)
-    # extract notes and chords from stream object
-    notes_and_chords = []
-    for element in stream_obj.flat:
-        if isinstance(element, note.Note):
-            notes_and_chords.append(element.pitch.midi)
-        elif isinstance(element, chord.Chord):
-            notes_and_chords.append('.'.join(str(n) for n in element.normalOrder))
-    return notes_and_chords
-
-# calculate probability distribution of sequence of notes
-def calculate_note_probabilities(notes):
-    note_counts = Counter(notes)
-    total_count = sum(note_counts.values())
-    note_probs = {note: count / total_count for note, count in note_counts.items()}
-    return note_probs
-
-# calculate KL divergence between two probability distributions
-def calculate_kl_divergence(p, q):
-    p_values = np.array(list(p.values()))
-    q_values = np.array([q[note] if note in q else 0.0 for note in p.keys()])
-    kl_divergence = entropy(p_values, q_values)
-    return kl_divergence
 
 
 if __name__ == '__main__':
